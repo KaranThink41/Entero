@@ -14,6 +14,7 @@ export const colors = {
   
   // Functional colors
   success: '#4CAF50',
+  successLight: '#E8F5E9', // Light green for success banners
   warning: '#FFC107',
   error: '#F44336',
   info: '#2196F3',
