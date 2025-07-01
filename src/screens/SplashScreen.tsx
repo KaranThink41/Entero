@@ -15,7 +15,7 @@ const SplashScreen = () => {
         <Text style={styles.subtitle}>Your Health, Our Priority</Text>
         <TouchableOpacity 
           style={styles.button}
-          onPress={() => navigation.navigate('HomeScreen')}
+          onPress={() => navigation.navigate('MainTabs')}
         >
           <Text style={styles.buttonText}>Get Started</Text>
         </TouchableOpacity>

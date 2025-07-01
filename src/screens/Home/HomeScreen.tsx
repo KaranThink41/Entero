@@ -14,19 +14,25 @@ import {
 } from 'react-native';
 import { colors } from '../../theme/colors';
 
+
 const { width } = Dimensions.get('window');
+
+// Screen padding for consistent spacing
+const SCREEN_PADDING = 16;
 
 // Define types for our data
 type CategoryCard = {
   id: string;
   title: string;
-  icon?: string; // Optional icon URL or name
+  icon?: string;
+  imageUrl: string;
 };
 
 type HealthPackage = {
   id: string;
   title: string;
-  icon?: string; // Optional icon URL or name
+  icon: string;
+  imageUrl: string;
 };
 
 type HealthConcern = {
@@ -34,6 +40,7 @@ type HealthConcern = {
   title: string;
   icon?: string; // Optional icon URL or name
   backgroundColor?: string;
+  imageUrl: string; // URL for the health concern image
 };
 
 type Brand = {
@@ -42,42 +49,270 @@ type Brand = {
   logo?: string; // Logo URL or placeholder
 };
 
-type TabItem = {
+type TestPackage = {
   id: string;
-  icon: string;
-  label: string;
-  active?: boolean;
+  title: string;
+  imageUrl: string;
+  testsIncluded: number;
+  price: number;
 };
+
+
 
 // Mock data for category cards
 const categoryCards: CategoryCard[] = [
-  { id: '1', title: 'Health Plan', icon: 'health-plan' },
-  { id: '2', title: 'Order with Prescription', icon: 'prescription' },
-  { id: '3', title: 'Care Plan', icon: 'care-plan' },
-  { id: '4', title: 'Pill Reminder', icon: 'pill-reminder' },
-  { id: '5', title: '1 Mg Stores', icon: 'store' },
-  { id: '6', title: 'Health Products', icon: 'health-products' },
+  { 
+    id: '1', 
+    title: 'Health Plan', 
+    icon: 'health-plan',
+    imageUrl: 'https://www.payday-loanpersonal.com/wp-content/uploads/2023/05/Health-Insurance-Plan.jpg'
+  },
+  { 
+    id: '2', 
+    title: 'Order with Prescription', 
+    icon: 'prescription',
+    imageUrl: 'https://t3.ftcdn.net/jpg/00/20/03/32/360_F_20033265_P1tNnv96fPYw00xfz9XOQcM1V4I69d4P.jpg'
+  },
+  { 
+    id: '3', 
+    title: 'Care Plan', 
+    icon: 'care-plan',
+    imageUrl: 'https://cdn-icons-png.flaticon.com/512/1225/1225565.png'
+  },
+  { 
+    id: '4', 
+    title: 'Pill Reminder', 
+    icon: 'pill-reminder',
+    imageUrl: 'https://m.media-amazon.com/images/I/61XgX9BK7OL.jpg'
+  },
+  { 
+    id: '5', 
+    title: 'Entero Stores', 
+    icon: 'store',
+    imageUrl: 'https://images.moneycontrol.com/static-mcnews/2021/11/Pharmacy-chain-in-the-US.jpg?impolicy=website&width=770&height=431'
+  },
+  { 
+    id: '6', 
+    title: 'Health Products', 
+    icon: 'health-products',
+    imageUrl: 'https://media.istockphoto.com/id/584574708/photo/soap-bar-and-liquid-shampoo-shower-gel-towels-spa-kit.jpg?s=612x612&w=0&k=20&c=TFeQmTwVUwKY0NDKFFORe3cwDCxRtotFgEujMswn3dc='
+  },
+];
+
+// Mock data for test packages
+const testPackages: TestPackage[] = [
+  {
+    id: '1',
+    title: 'Allergy Test',
+    imageUrl: 'https://img.freepik.com/free-photo/allergy-test-concept-with-syringe_23-2148854955.jpg',
+    testsIncluded: 12,
+    price: 999
+  },
+  {
+    id: '2',
+    title: 'Diabetes Package',
+    imageUrl: 'https://img.freepik.com/free-photo/doctor-holding-pen-closeup_1098-3491.jpg',
+    testsIncluded: 8,
+    price: 1299
+  },
+  {
+    id: '3',
+    title: 'Thyroid Package',
+    imageUrl: 'https://img.freepik.com/free-photo/medical-still-life-arrangement_23-2148858042.jpg',
+    testsIncluded: 6,
+    price: 899
+  },
+  {
+    id: '4',
+    title: 'Weight Management',
+    imageUrl: 'https://img.freepik.com/free-photo/young-woman-holding-paper-with-text-lose-weight_23-2148854839.jpg',
+    testsIncluded: 10,
+    price: 1799
+  },
+  {
+    id: '5',
+    title: 'Adult Women',
+    imageUrl: 'https://img.freepik.com/free-photo/beautiful-young-woman-doing-yoga_23-2148854835.jpg',
+    testsIncluded: 12,
+    price: 1599
+  },
+  {
+    id: '6',
+    title: 'Senior Women',
+    imageUrl: 'https://img.freepik.com/free-photo/elderly-woman-doing-yoga_23-2148854843.jpg',
+    testsIncluded: 15,
+    price: 1899
+  },
+  {
+    id: '7',
+    title: 'Women Fitness',
+    imageUrl: 'https://img.freepik.com/free-photo/young-woman-exercising-park_23-2148854838.jpg',
+    testsIncluded: 10,
+    price: 1699
+  },
+  {
+    id: '8',
+    title: 'Adult Men',
+    imageUrl: 'https://img.freepik.com/free-photo/young-handsome-man-doing-exercise-gym_23-2148854840.jpg',
+    testsIncluded: 12,
+    price: 1599
+  },
+  {
+    id: '9',
+    title: 'Senior Men',
+    imageUrl: 'https://img.freepik.com/free-photo/elderly-man-doing-yoga_23-2148854842.jpg',
+    testsIncluded: 16,
+    price: 1999
+  },
+  {
+    id: '10',
+    title: 'Men Fitness',
+    imageUrl: 'https://img.freepik.com/free-photo/young-man-exercising-park_23-2148854839.jpg',
+    testsIncluded: 11,
+    price: 1699
+  },
+  {
+    id: '11',
+    title: 'Stress & Fatigue',
+    imageUrl: 'https://img.freepik.com/free-photo/young-woman-feeling-tired-her-bedroom_23-2148854852.jpg',
+    testsIncluded: 8,
+    price: 1299
+  },
+  {
+    id: '12',
+    title: 'Habit & Diet',
+    imageUrl: 'https://img.freepik.com/free-photo/healthy-food-selection_23-2148854977.jpg',
+    testsIncluded: 9,
+    price: 1499
+  },
+  {
+    id: '13',
+    title: 'Vitamin Level',
+    imageUrl: 'https://img.freepik.com/free-photo/vitamin-supplements-with-fruits-vegetables_23-2148854978.jpg',
+    testsIncluded: 7,
+    price: 1199
+  },
+  {
+    id: '14',
+    title: 'Hormones',
+    imageUrl: 'https://img.freepik.com/free-photo/medical-test-tubes-lab_23-2149215310.jpg',
+    testsIncluded: 14,
+    price: 2199
+  },
+  {
+    id: '15',
+    title: 'Genetics',
+    imageUrl: 'https://img.freepik.com/free-photo/dna-structure-blue-background_23-2148854979.jpg',
+    testsIncluded: 18,
+    price: 2599
+  },
 ];
 
 // Mock data for health packages
 const healthPackages: HealthPackage[] = [
-  { id: '1', title: 'Health Concern', icon: 'health-concern' },
-  { id: '2', title: 'Health Checkups', icon: 'health-checkup' },
-  { id: '3', title: "Women's Health", icon: 'womens-health' },
-  { id: '4', title: "Men's Health", icon: 'mens-health' },
+  { 
+    id: '1', 
+    title: 'Health Concern', 
+    icon: 'health-concern',
+    imageUrl: 'https://media.istockphoto.com/id/1190794708/photo/doctor-or-physician-writing-diagnosis-and-giving-a-medical-prescription-to-male-patient.jpg?s=612x612&w=0&k=20&c=n5pElCFiR1L-meB8TOGNTdpt4uS2ChJgcMH2pLQpUb0='
+  },
+  { 
+    id: '2', 
+    title: 'Health Checkups', 
+    icon: 'health-checkup',
+    imageUrl: 'https://wrayhospital.org/wp-content/uploads/2023/11/shutterstock_327930536.jpg'
+  },
+  { 
+    id: '3', 
+    title: "Women's Health", 
+    icon: 'womens-health',
+    imageUrl: 'https://emi.parkview.com/media/Image/Dashboard_835_womens_heart_health_3_23.jpg'
+  },
+  { 
+    id: '4', 
+    title: "Men's Health", 
+    icon: 'mens-health',
+    imageUrl: 'https://assets.rbl.ms/19156644/origin.jpg'
+  },
+  { 
+    id: '5', 
+    title: 'Organ Test', 
+    icon: 'organ-test',
+    imageUrl: 'https://assets.medpagetoday.net/media/images/107xxx/107709.jpg'
+  },
+  { 
+    id: '6', 
+    title: 'Special Test', 
+    icon: 'special-test',
+    imageUrl: 'https://assets.clevelandclinic.org/transform/LargeFeatureImage/f78da9bf-34b8-433a-a789-74dd8a7593d9/single-blood-test-can-detect-50-cancer-2166352700'
+  },
 ];
 
 // Mock data for health concerns
 const healthConcerns: HealthConcern[] = [
-  { id: '1', title: 'Diabetes', icon: 'diabetes', backgroundColor: colors.primaryLightest },
-  { id: '2', title: 'Heart Care', icon: 'heart', backgroundColor: colors.primaryLighter },
-  { id: '3', title: 'Stomach Care', icon: 'stomach', backgroundColor: colors.primaryLight },
-  { id: '4', title: 'Liver Care', icon: 'liver', backgroundColor: colors.primaryLightest },
-  { id: '5', title: 'Bone, Joint & Muscle', icon: 'bone', backgroundColor: colors.primaryLighter },
-  { id: '6', title: 'Kidney Care', icon: 'kidney', backgroundColor: colors.primaryLight },
-  { id: '7', title: 'Derma Care', icon: 'skin', backgroundColor: colors.primaryLightest },
-  { id: '8', title: 'Respiratory', icon: 'lungs', backgroundColor: colors.primaryLighter },
-  { id: '9', title: 'Eye Care', icon: 'eye', backgroundColor: colors.primaryLight },
+  { 
+    id: '1', 
+    title: 'Diabetes', 
+    icon: 'diabetes', 
+    backgroundColor: colors.primaryLightest,
+    imageUrl: 'https://www.helmholtz-hzi.de/fileadmin/_processed_/f/b/csm_AdobeStock_130470296_afa776c598.jpeg'
+  },
+  { 
+    id: '2', 
+    title: 'Heart Care', 
+    icon: 'heart', 
+    backgroundColor: colors.primaryLighter,
+    imageUrl: 'https://img.freepik.com/premium-photo/heart-cardiology-person-hands-chest-with-pain-sick-cardiovascular-healthcare-closeup-indigestion-heartburn-health-with-wellness-elderly-care-with-anxiety-attack-hypertension_590464-252063.jpg'
+  },
+  { 
+    id: '3', 
+    title: 'Stomach Care', 
+    icon: 'stomach', 
+    backgroundColor: colors.primaryLight,
+    imageUrl: 'https://media.istockphoto.com/id/868196718/photo/abdominal-pain-stomach-ache.jpg?s=612x612&w=0&k=20&c=EwNYDzcDVYtcP0XohcnaiM0EtLb3PXUi5lNkme7rRAk='
+  },
+  { 
+    id: '4', 
+    title: 'Liver Care', 
+    icon: 'liver', 
+    backgroundColor: colors.primaryLightest,
+    imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-ItH5C3lOJjUmqF-dxySnZMLHF7xt1J6Ecg&s'
+  },
+  { 
+    id: '5', 
+    title: 'Bone, Joint & Muscle', 
+    icon: 'bone', 
+    backgroundColor: colors.primaryLighter,
+    imageUrl: 'https://www.curahospitals.com/wp-content/uploads/2022/06/mobile-banner.png'
+  },
+  { 
+    id: '6', 
+    title: 'Kidney Care', 
+    icon: 'kidney', 
+    backgroundColor: colors.primaryLight,
+    imageUrl: 'https://d35oenyzp35321.cloudfront.net/Kidney_faliure_25ed527d13.jpg'
+  },
+  { 
+    id: '7', 
+    title: 'Derma Care', 
+    icon: 'skin', 
+    backgroundColor: colors.primaryLightest,
+    imageUrl: 'https://www.dermaartsclinic.com/assets/images/skin-care-model1.webp'
+  },
+  { 
+    id: '8', 
+    title: 'Respiratory', 
+    icon: 'lungs', 
+    backgroundColor: colors.primaryLighter,
+    imageUrl: 'https://thumbs.dreamstime.com/b/digital-illustration-human-respiratory-system-red-lungs-bronchial-tubes-trachea-inside-male-body-anatomy-illustration-360044665.jpg'
+  },
+  { 
+    id: '9', 
+    title: 'Eye Care', 
+    icon: 'eye', 
+    backgroundColor: colors.primaryLight,
+    imageUrl: 'https://www.clinicbarcelona.org/media/cache/960_jpeg/uploads/media/default/0007/79/951a5b362def439d3ac2dba713e93dae41a004f1.jpg'
+  },
 ];
 
 // Mock data for top brands
@@ -96,44 +331,62 @@ const topBrands: Brand[] = [
   { id: '12', name: 'Protinex', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS15_yCScE3pocRQ_4x4JzT477S762pDlJU9w&s' },
 ];
 
-// Bottom tab icons
-const tabItems: TabItem[] = [
-  { id: '1', icon: '🏠', label: 'Home', active: true },
-  { id: '2', icon: '👨‍⚕️', label: 'Doctor' },
-  { id: '3', icon: '💊', label: 'Pharmacy' },
-  { id: '4', icon: '🧪', label: 'Lab Test' },
-  { id: '5', icon: '👤', label: 'Profile' },
-];
-
 const HomeScreen = () => {
   // Render a category card
   const renderCategoryCard = ({ item }: { item: CategoryCard }) => (
     <TouchableOpacity style={styles.categoryCard}>
-      <View style={styles.categoryIconPlaceholder}>
-        {/* We would use a proper Image component here with the icon source */}
-        {/* <Image source={require(`../assets/icons/${item.icon}.png`)} style={styles.categoryIcon} /> */}
+      <View style={styles.categoryImageContainer}>
+        <Image 
+          source={{ uri: item.imageUrl }} 
+          style={styles.categoryImage}
+          resizeMode="cover"
+        />
       </View>
       <Text style={styles.categoryTitle} numberOfLines={1}>{item.title}</Text>
     </TouchableOpacity>
   );
 
+  // Render a test package card
+  const renderTestPackage = ({ item }: { item: TestPackage }) => (
+    <View style={styles.testPackageCard}>
+      <TouchableOpacity>
+        <View style={styles.testPackageImageContainer}>
+          <Image 
+            source={{ uri: item.imageUrl }} 
+            style={styles.testPackageImage}
+            resizeMode="cover"
+          />
+        </View>
+        <Text style={styles.testPackageTitle} numberOfLines={2}>{item.title}</Text>
+      </TouchableOpacity>
+    </View>
+  );
+
   // Render a health package card
   const renderHealthPackage = ({ item }: { item: HealthPackage }) => (
-    <TouchableOpacity style={styles.healthPackageCard}>
-      <View style={styles.healthPackageIconPlaceholder}>
-        {/* We would use a proper Image component here with the icon source */}
-        {/* <Image source={require(`../assets/icons/${item.icon}.png`)} style={styles.healthPackageIcon} /> */}
-      </View>
-      <Text style={styles.healthPackageTitle} numberOfLines={2}>{item.title}</Text>
-    </TouchableOpacity>
+    <View style={styles.healthPackageCard}>
+      <TouchableOpacity>
+        <View style={styles.healthPackageImageContainer}>
+          <Image 
+            source={{ uri: item.imageUrl }} 
+            style={styles.healthPackageImage}
+            resizeMode="cover"
+          />
+        </View>
+        <Text style={styles.healthPackageTitle} numberOfLines={2}>{item.title}</Text>
+      </TouchableOpacity>
+    </View>
   );
 
   // Render a health concern card
   const renderHealthConcern = ({ item }: { item: HealthConcern }) => (
     <TouchableOpacity style={styles.healthConcernCard}>
-      <View style={[styles.healthConcernIconPlaceholder, { backgroundColor: item.backgroundColor }]}>
-        {/* We would use a proper Image component here with the icon source */}
-        {/* <Image source={require(`../assets/icons/${item.icon}.png`)} style={styles.healthConcernIcon} /> */}
+      <View style={[styles.healthConcernImageContainer, { backgroundColor: item.backgroundColor }]}>
+        <Image 
+          source={{ uri: item.imageUrl }} 
+          style={styles.healthConcernImage}
+          resizeMode="cover"
+        />
       </View>
       <Text style={styles.healthConcernTitle} numberOfLines={1}>{item.title}</Text>
     </TouchableOpacity>
@@ -150,17 +403,11 @@ const HomeScreen = () => {
     </TouchableOpacity>
   );
 
-  // Render a bottom tab item
-  const renderTabItem = ({ item }: { item: TabItem }) => (
-    <TouchableOpacity style={[styles.tabItem, item.active ? styles.activeTabItem : null]}>
-      <Text style={[styles.tabIcon, item.active ? styles.activeTabIcon : null]}>{item.icon}</Text>
-      <Text style={[styles.tabLabel, item.active ? styles.activeTabLabel : null]}>{item.label}</Text>
-    </TouchableOpacity>
-  );
+
 
   return (
     <View style={styles.container}>
-      <StatusBar backgroundColor={colors.primary} barStyle="light-content" />
+      <StatusBar backgroundColor="#FFFFFF" barStyle="dark-content" />
       
       {/* Header */}
       <View style={styles.safeArea}>
@@ -236,6 +483,8 @@ const HomeScreen = () => {
         {/* Lab Test and Health Packages Section */}
         <View style={styles.sectionContainer}>
           <Text style={styles.sectionTitle}>Lab test and health packages</Text>
+          
+          {/* Health Packages Row (Circular) */}
           <FlatList
             data={healthPackages}
             renderItem={renderHealthPackage}
@@ -243,6 +492,19 @@ const HomeScreen = () => {
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.healthPackagesContent}
+            style={styles.healthPackagesList}
+          />
+          
+          {/* Test Packages Row (Square) */}
+          <FlatList
+            data={testPackages}
+            renderItem={renderTestPackage}
+            keyExtractor={(item) => item.id}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.testPackagesContent}
+            style={styles.testPackagesList}
+            ItemSeparatorComponent={() => <View style={{ width: 10 }} />}
           />
         </View>
 
@@ -260,15 +522,7 @@ const HomeScreen = () => {
         </View>
       </ScrollView>
 
-      {/* Bottom Navigation */}
-      <View style={styles.bottomNavigation}>
-        {tabItems.map((item) => (
-          <TouchableOpacity key={item.id} style={styles.tabItem}>
-            <Text style={styles.tabIcon}>{item.icon}</Text>
-            <Text style={styles.tabLabel}>{item.label}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+
     </View>
   );
 };
@@ -279,7 +533,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
   },
   safeArea: {
-    backgroundColor: colors.primary,
+    backgroundColor: colors.white,
     paddingTop: StatusBar.currentHeight,
   },
   safeAreaContent: {
@@ -292,7 +546,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 8,
     paddingBottom: 8,
-    backgroundColor: colors.primary,
+    backgroundColor: colors.white,
   },
   headerRightContainer: {
     flexDirection: 'row',
@@ -303,7 +557,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   downArrow: {
-    color: colors.white,
+    color: colors.primary,
     fontSize: 10,
     marginLeft: 4,
     opacity: 0.8,
@@ -313,12 +567,12 @@ const styles = StyleSheet.create({
   },
   deliverToText: {
     fontSize: 12,
-    color: colors.white,
+    color: colors.black, // Changed from colors.primary to black
     opacity: 0.9,
   },
   locationText: {
     fontSize: 14,
-    color: colors.white,
+    color: colors.black, // Changed from colors.primary to black
     fontWeight: '500',
     maxWidth: '85%',
   },
@@ -328,7 +582,7 @@ const styles = StyleSheet.create({
   },
   notificationIcon: {
     fontSize: 20,
-    color: colors.white,
+    color: colors.primary,
   },
   cartButton: {
     padding: 8,
@@ -338,7 +592,7 @@ const styles = StyleSheet.create({
   },
   cartIcon: {
     fontSize: 22,
-    color: colors.white,
+    color: colors.primary,
   },
   cartBadge: {
     position: 'absolute',
@@ -358,14 +612,17 @@ const styles = StyleSheet.create({
   },
   searchContainer: {
     paddingHorizontal: 16,
-    paddingVertical: 10,
-    backgroundColor: colors.primary,
+    paddingTop: 5,
+    paddingBottom: 5, // Reduced vertical padding
+    backgroundColor: colors.white,
   },
   searchBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.white,
-    borderRadius: 25,
+    backgroundColor: '#FFF5F5',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#FFE0E0',
     paddingHorizontal: 15,
     paddingVertical: 8,
     height: 46,
@@ -399,27 +656,38 @@ const styles = StyleSheet.create({
     backgroundColor: colors.lightGray,
   },
   categoryGrid: {
-    padding: 16,
-    backgroundColor: colors.white,
+    paddingTop: 0, // Remove top padding
+    paddingHorizontal: 16,
+    paddingBottom: 16,
+    backgroundColor: colors.white, // White background for the overall grid
   },
   categoryGridContent: {
-    paddingVertical: 10,
+    paddingTop: 0, // Remove top padding
+    paddingBottom: 10,
   },
   categoryCard: {
     flex: 1,
     alignItems: 'center',
-    padding: 5,
+    padding: 8,
     margin: 5,
     maxWidth: width / 3.2,
+    backgroundColor: colors.white, // White background for the entire card
+    borderRadius: 12, // Rounded corners
   },
-  categoryIconPlaceholder: {
-    width: width / 3.8,
-    height: width / 3.8,
-    backgroundColor: colors.primaryLightest,
-    borderRadius: 8,
+  categoryImageContainer: {
+    width: width / 4.5, // Smaller image size
+    height: width / 4.5, // Smaller image size
+    borderRadius: 12, // Matching the card border radius
     marginBottom: 8,
+    overflow: 'hidden',
+    backgroundColor: '#FFEBEB', // Pink background only behind the image
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  categoryImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 12, // Matching the container border radius
   },
   categoryTitle: {
     fontSize: 12,
@@ -441,21 +709,31 @@ const styles = StyleSheet.create({
   },
   healthPackagesContent: {
     paddingVertical: 10,
+    paddingHorizontal: 8,
+  },
+  healthPackagesList: {
+    flexGrow: 0,
   },
   healthPackageCard: {
-    flex: 1,
+    width: width / 4.5,
     alignItems: 'center',
-    padding: 8,
-    margin: 5,
+    paddingHorizontal: 4,
+    marginRight: 8,
   },
-  healthPackageIconPlaceholder: {
+  healthPackageImageContainer: {
     width: width / 6,
     height: width / 6,
+    borderRadius: width / 12, // Half of width/height to make it circular
+    marginBottom: 6,
+    overflow: 'hidden',
     backgroundColor: colors.lightGray,
-    borderRadius: width / 12,
-    marginBottom: 10,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  healthPackageImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: width / 11, // Match container's border radius
   },
   healthPackageTitle: {
     fontSize: 12,
@@ -463,6 +741,42 @@ const styles = StyleSheet.create({
     color: colors.darkGray,
     fontWeight: '500',
   },
+
+  // Test Packages Styles
+  testPackagesContent: {
+    paddingVertical: 10,
+    paddingLeft: 16,
+    paddingRight: 6,
+  },
+  testPackagesList: {
+    flexGrow: 0,
+    marginTop: 10,
+  },
+  testPackageCard: {
+    width: width / 3.5,
+    alignItems: 'center',
+  },
+  testPackageImageContainer: {
+    width: width / 3.8,
+    height: width / 3.8,
+    borderRadius: 8,
+    marginBottom: 5,
+    overflow: 'hidden',
+    backgroundColor: colors.lightGray,
+  },
+  testPackageImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 8,
+  },
+  testPackageTitle: {
+    fontSize: 12,
+    textAlign: 'center',
+    color: colors.darkGray,
+    fontWeight: '500',
+    marginTop: 4,
+  },
+
   healthConcernsContent: {
     paddingVertical: 10,
   },
@@ -473,13 +787,19 @@ const styles = StyleSheet.create({
     margin: 5,
     maxWidth: width / 3.2,
   },
-  healthConcernIconPlaceholder: {
+  healthConcernImageContainer: {
     width: width / 3.8,
     height: width / 3.8,
     borderRadius: 8,
     marginBottom: 8,
     justifyContent: 'center',
     alignItems: 'center',
+    overflow: 'hidden',
+  },
+  healthConcernImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 8,
   },
   healthConcernTitle: {
     fontSize: 12,
@@ -504,42 +824,6 @@ const styles = StyleSheet.create({
     width: width / 5,
     height: width / 8,
     resizeMode: 'contain',
-  },
-  bottomNavigation: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    borderTopWidth: 1,
-    borderTopColor: colors.lightGray,
-    backgroundColor: colors.white,
-    paddingVertical: 10,
-    paddingBottom: 15,
-  },
-  tabItem: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 5,
-  },
-  activeTabItem: {
-    borderBottomWidth: 2,
-    borderBottomColor: colors.primary,
-  },
-  tabIcon: {
-    fontSize: 24,
-    marginBottom: 5,
-    color: colors.darkGray,
-  },
-  activeTabIcon: {
-    color: colors.primary,
-  },
-  tabLabel: {
-    fontSize: 12,
-    color: colors.darkGray,
-    fontWeight: '500',
-  },
-  activeTabLabel: {
-    color: colors.primary,
-    fontWeight: '700',
   },
 });
 
