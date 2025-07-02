@@ -2,10 +2,12 @@ import React from 'react';
 import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { colors } from '../../theme/colors';
 import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../navigation/AppNavigator';
 import { useCart } from '../../context/CartContext';
 
 const CartScreen = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { items, updateQuantity, removeFromCart, getTotalPrice } = useCart();
   
   // Calculate bill details based on actual cart items
@@ -174,7 +176,10 @@ const CartScreen = () => {
           <Text style={styles.footerPrice}>₹{billDetails.toBePaid}</Text>
           <Text style={styles.footerPriceLabel}>To be paid</Text>
         </View>
-        <TouchableOpacity style={styles.continueButton}>
+        <TouchableOpacity 
+          style={styles.continueButton}
+          onPress={() => navigation.navigate('AddPrescription')}
+        >
           <Text style={styles.continueButtonText}>Continue to add prescription</Text>
         </TouchableOpacity>
       </View>

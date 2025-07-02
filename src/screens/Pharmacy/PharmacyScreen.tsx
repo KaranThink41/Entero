@@ -235,16 +235,18 @@ const PharmacyScreen = () => {
   // Use cart context for managing quantities
   const { addToCart, updateQuantity, items } = useCart();
 
-  const getCardQuantity = (item: DealItem) => {
-    const existingItem = items.find(cartItem => cartItem.id === item.id);
+  const getCardQuantity = (item: DealItem, sectionId: string) => {
+    const uniqueId = `${sectionId}_${item.id}`;
+    const existingItem = items.find(cartItem => cartItem.id === uniqueId);
     return existingItem ? existingItem.quantity : 0;
   };
 
-  const increaseQuantity = (item: DealItem) => {
-    const currentQuantity = getCardQuantity(item);
+  const increaseQuantity = (item: DealItem, sectionId: string) => {
+    const uniqueId = `${sectionId}_${item.id}`;
+    const currentQuantity = getCardQuantity(item, sectionId);
     if (currentQuantity === 0) {
       addToCart({
-        id: item.id || '',
+        id: uniqueId,
         title: item.title || '',
         price: item.price || 0,
         originalPrice: item.originalPrice || 0,
@@ -253,14 +255,15 @@ const PharmacyScreen = () => {
         quantity: 1
       });
     } else {
-      updateQuantity(item.id, currentQuantity + 1);
+      updateQuantity(uniqueId, currentQuantity + 1);
     }
   };
 
-  const decreaseQuantity = (item: DealItem) => {
-    const currentQuantity = getCardQuantity(item);
+  const decreaseQuantity = (item: DealItem, sectionId: string) => {
+    const uniqueId = `${sectionId}_${item.id}`;
+    const currentQuantity = getCardQuantity(item, sectionId);
     if (currentQuantity > 0) {
-      updateQuantity(item.id, currentQuantity - 1);
+      updateQuantity(uniqueId, currentQuantity - 1);
     }
   };
 
@@ -289,7 +292,7 @@ const PharmacyScreen = () => {
   );
 
   const renderDealItem = ({ item, sectionId }: { item: DealItem, sectionId: string }) => {
-    const quantity = getCardQuantity(item);
+    const quantity = getCardQuantity(item, sectionId);
     
     return (
       <TouchableOpacity 
@@ -353,7 +356,7 @@ const PharmacyScreen = () => {
             style={styles.addToCartButton}
             onPress={(e) => {
               e.stopPropagation();
-              increaseQuantity(item);
+              increaseQuantity(item, sectionId);
             }}
           >
             <Text style={styles.addToCartText}>Add to cart</Text>
@@ -364,7 +367,7 @@ const PharmacyScreen = () => {
               style={styles.quantityButton}
               onPress={(e) => {
                 e.stopPropagation(); // Prevent triggering the parent TouchableOpacity
-                decreaseQuantity(item);
+                decreaseQuantity(item, sectionId);
               }}
             >
               <Text style={styles.quantityButtonText}>−</Text>
@@ -376,7 +379,7 @@ const PharmacyScreen = () => {
               style={styles.quantityButton}
               onPress={(e) => {
                 e.stopPropagation(); // Prevent triggering the parent TouchableOpacity
-                increaseQuantity(item);
+                increaseQuantity(item, sectionId);
               }}
             >
               <Text style={styles.quantityButtonText}>+</Text>
@@ -428,7 +431,12 @@ const PharmacyScreen = () => {
             </View>
             <View style={styles.actionCard}>
                 <Text style={styles.actionCardText}>Order with prescription</Text>
-                <TouchableOpacity style={styles.actionButton}><Text style={styles.actionButtonText}>Order Now</Text></TouchableOpacity>
+                <TouchableOpacity 
+                  style={styles.actionButton}
+                  onPress={() => navigation.navigate('AddPrescription')}
+                >
+                  <Text style={styles.actionButtonText}>Order Now</Text>
+                </TouchableOpacity>
             </View>
         </View>
 

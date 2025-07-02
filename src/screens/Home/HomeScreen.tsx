@@ -1,4 +1,7 @@
 import React from 'react';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../navigation/AppNavigator';
 import {
   View,
   Text,
@@ -332,9 +335,17 @@ const topBrands: Brand[] = [
 ];
 
 const HomeScreen = () => {
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   // Render a category card
   const renderCategoryCard = ({ item }: { item: CategoryCard }) => (
-    <TouchableOpacity style={styles.categoryCard}>
+    <TouchableOpacity 
+      style={styles.categoryCard}
+      onPress={() => {
+        if (item.title === 'Order with Prescription') {
+          navigation.navigate('AddPrescription');
+        }
+      }}
+    >
       <View style={styles.categoryImageContainer}>
         <Image 
           source={{ uri: item.imageUrl }} 

@@ -8,6 +8,7 @@ import HomeScreen from '../screens/Home/HomeScreen';
 import PharmacyScreen from '../screens/Pharmacy/PharmacyScreen';
 import ProductDetailScreen from '../screens/ProductDetail/ProductDetailScreen';
 import CartScreen from '../screens/Cart/CartScreen';
+import AddPrescriptionScreen from '../screens/Prescription/AddPrescriptionScreen';
 import { colors } from '../theme/colors';
 import { CartProvider } from '../context/CartContext';
 
@@ -17,6 +18,7 @@ type RootStackParamList = {
   MainTabs: undefined;
   ProductDetail: { productId?: string };
   Cart: undefined;
+  AddPrescription: undefined;
 };
 
 type TabParamList = {
@@ -111,6 +113,7 @@ const AppNavigator = () => {
         <Stack.Screen name="MainTabs" component={MainTabs} />
         <Stack.Screen name="ProductDetail" component={ProductDetailScreen} options={{ headerShown: true }} />
         <Stack.Screen name="Cart" component={CartScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="AddPrescription" component={AddPrescriptionScreen} options={{ headerShown: false }} />
         </Stack.Navigator>
       </NavigationContainer>
     </CartProvider>
